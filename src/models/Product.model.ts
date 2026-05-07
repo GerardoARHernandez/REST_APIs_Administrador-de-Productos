@@ -2,8 +2,8 @@ import { Table, Column, Model, DataType, Default } from "sequelize-typescript";
 
 @Table({
     tableName: "products",
+    paranoid: true  
 })
-
 class Product extends Model {
     @Column({
         type: DataType.STRING(100)
@@ -23,4 +23,3 @@ class Product extends Model {
 }
 
 export default Product;
-

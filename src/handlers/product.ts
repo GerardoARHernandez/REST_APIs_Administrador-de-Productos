@@ -62,3 +62,84 @@ export const createProduct = async (req: Request, res: Response) => {
         res.status(500).json({ message: "Error al crear el producto" });
     }
 }
+
+export const updateProduct = async (req: Request, res: Response) => {
+
+    try {
+        const id = Number(req.params.id);
+        const product = await Product.findByPk(id);
+
+        if (!product) {
+            return res.status(404).json({ message: "Producto no encontrado" });
+        }
+
+        //Actualizar el producto
+        await product.update(req.body);
+        await product.save();
+
+        res.json({data: product, message: "Producto actualizado correctamente"});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Error al actualizar el producto" });
+    }
+
+}
+
+export const updateAvailability = async (req: Request, res: Response) => {
+
+    try {
+        const id = Number(req.params.id);
+        const product = await Product.findByPk(id);
+
+        if (!product) {
+            return res.status(404).json({ message: "Producto no encontrado" });
+        }
+
+        //Actualizar la disponibilidad del producto
+        product.availability = !product.dataValues.availability;
+        await product.save();
+
+        res.json({data: product, message: "Disponibilidad actualizada correctamente"});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Error al actualizar la disponibilidad del producto" });
+    }
+
+}
+
+export const restoreProduct = async (req: Request, res: Response) => {
+    try {
+        const id = Number(req.params.id);
+        // Buscamos también entre los "paranoid: false" (incluye eliminados)
+        const product = await Product.findByPk(id, { paranoid: false });
+
+        if (!product) {
+            return res.status(404).json({ message: "Producto no encontrado" });
+        }
+
+        //Restaurar el producto
+        await product.restore();
+        res.json({data: product, message: "Producto restaurado correctamente"});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Error al restaurar el producto" });
+    }
+}
+
+export const deleteProduct = async (req: Request, res: Response) => {
+    try {
+        const id = Number(req.params.id);
+        const product = await Product.findByPk(id);
+
+        if (!product) {
+            return res.status(404).json({ message: "Producto no encontrado" });
+        }
+
+        //Eliminar el producto (soft delete)
+        await product.destroy();
+        res.json({message: "Producto eliminado correctamente", deletedAt: product.get('deletedAt')});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Error al eliminar el producto" });
+    }
+}
