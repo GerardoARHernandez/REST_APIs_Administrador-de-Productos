@@ -1,5 +1,18 @@
-describe('Primer Test', () => {
-    it('Debe revisar que 1+1 sea 2', () => {
-        expect(1 + 1).toBe(2) 
+import { connectDB } from '../server'
+import db from '../config/db'
+
+jest.mock('../config/db')
+
+describe('connectDB', () => {
+    it('should handle database connection error', async () => {
+        jest.spyOn(db, 'authenticate')
+            .mockRejectedValueOnce(new Error('Hubo un error al conectar a la BD'))
+        const consoleSpy = jest.spyOn(console, 'log')
+
+        await connectDB()
+
+        expect(consoleSpy).toHaveBeenCalledWith(
+            expect.stringContaining('Hubo un error al conectar a la BD')
+        )
     })
 })

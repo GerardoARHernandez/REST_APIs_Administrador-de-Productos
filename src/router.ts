@@ -24,7 +24,7 @@ router.post("/",
     body("price")
         .isNumeric().withMessage("El precio debe ser un número")
         .notEmpty().withMessage("El precio no puede ir vacio")
-        .custom( value => value > 0).withMessage("Precio no válido, debe ser mayor a 0"),
+        .custom( value => value > 0).withMessage("Precio no válido"),
     handleInputErrors,    
     
     createProduct
@@ -39,7 +39,7 @@ router.put("/:id",
     body("price")
         .isNumeric().withMessage("El precio debe ser un número")
         .notEmpty().withMessage("El precio no puede ir vacio")
-        .custom( value => value > 0).withMessage("Precio no válido, debe ser mayor a 0"),
+        .custom( value => value > 0).withMessage("Precio no válido"),
     body("availability")
         .isBoolean().withMessage("Valor para la disponibilidad no válido"),
     handleInputErrors,        

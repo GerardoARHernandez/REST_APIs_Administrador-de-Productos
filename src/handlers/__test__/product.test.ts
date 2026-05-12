@@ -197,6 +197,19 @@ describe('PATCH /api/products/:id', () => {
     })
 })
 
+describe('PATCH /api/products/restore/:id', () => {
+    it('should return a 404 response for a non-existing product', async () => {
+        const response = await request(server).patch(`/api/products/restore/1`)
+        expect(response.status).toBe(200)
+        expect(response.body).toHaveProperty('data')
+        expect(response.body.message).toBe('Producto restaurado correctamente')
+        expect(response.body.error).not.toBe('Producto no encontrado')
+        expect(response.status).not.toBe(404)
+    })
+
+})
+
+
 describe('DELETE /api/products/:id', () => {
     it('should check a valid ID', async () => {
         const response = await request(server).delete('/api/products/not-valid')
@@ -216,7 +229,7 @@ describe('DELETE /api/products/:id', () => {
     it('should delete a product', async () => {
         const response = await request(server).delete('/api/products/1')
         expect(response.status).toBe(200)
-        expect(response.body.data).toBe("Producto Eliminado")
+        expect(response.body.message).toBe("Producto eliminado correctamente")
 
         expect(response.status).not.toBe(404)
         expect(response.status).not.toBe(400)
